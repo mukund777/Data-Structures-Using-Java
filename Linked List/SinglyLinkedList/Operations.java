@@ -7,6 +7,8 @@ Various operations that can be performed on a singly linked list include :
 5. Deletion of elements at a specific position.
 6. Searching for an element in a linked list.
 7. Updation of the data value at a specified position.
+
+Note : Check for all edge cases
 */
 
 public class Operations {
