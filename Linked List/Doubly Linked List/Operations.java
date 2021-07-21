@@ -1,34 +1,27 @@
-/*
-Various operations that can be performed on a singly linked list include :
-1. Displaying the list.
-2. Insertion of elements (At the last position).
-3. Insertion of elements at a specific position.
-4. Deletion of elements (At last position).
-5. Deletion of elements at a specific position.
-6. Searching for an element in a linked list.
-7. Updation of the data value at a specified position.
-*/
-
 public class Operations {
 
-    // Printing the contents of a linked list.
-    public void display(SinglyLinkedList list) {
+    public void display(DoublyLinkedList list) {
         if (list.head == null) {
             System.out.print("Empty list");
         } else {
+            System.out.print("Forward pass : ");
             Node counter = list.head;
-            while (counter != null) {
-                System.out.print(counter.data + " ");
+            System.out.print(counter.data + " ");
+            while (counter.next != null) {
                 counter = counter.next;
+                System.out.print(counter.data + " ");
             }
             System.out.println("");
-            int size = sizeList(list);
-            System.out.println("Length of the linked list is "+size);
+            System.out.print("Reverse pass : ");
+            while (counter != null) {
+                System.out.print(counter.data + " ");
+                counter = counter.previous;
+            }
+            System.out.println("");
         }
     }
 
-    // Insertion of data at the end.
-    public SinglyLinkedList insertLast(SinglyLinkedList list, int data) {
+    public DoublyLinkedList insertLast(DoublyLinkedList list, int data) {
         Node newNode = new Node(data);
         if (list.head == null) {
             list.head = newNode;
@@ -38,12 +31,12 @@ public class Operations {
                 counter = counter.next;
             }
             counter.next = newNode;
+            newNode.previous = counter;
         }
         return list;
     }
 
-    // Insertion of data at a specified position.
-    public SinglyLinkedList insertPosition(SinglyLinkedList list, int data, int position) {
+    public DoublyLinkedList insertPosition(DoublyLinkedList list, int data, int position) {
         if (position < 1) {
             System.out.println("Position doesn't exist. Please enter a value greater than 0. ");
         } else {
@@ -56,6 +49,7 @@ public class Operations {
                 Node counter = list.head;
                 while (counter.next != null) {
                     if (i+1 == position) {
+                        counter.next.previous = newNode;
                         break;
                     } else {
                         counter = counter.next;
@@ -67,29 +61,13 @@ public class Operations {
                 }
                 newNode.next = counter.next;
                 counter.next = newNode;
+                newNode.previous = counter;
             }
         }
         return list;
     }
 
-    // Obtaining the size of a list.
-    public static int sizeList(SinglyLinkedList list) {
-        int i;
-        if (list.head == null) {
-            i = 0;
-        } else {
-            Node counter = list.head;
-            i = 0;
-            while (counter != null) {
-                counter = counter.next;
-                i++;
-            }
-        }
-        return i;
-    }
-
-    // Deletion of the last element.
-    public SinglyLinkedList deleteLast(SinglyLinkedList list) {
+    public DoublyLinkedList deleteLast(DoublyLinkedList list) {
         if (list.head == null) {
             System.out.print("Empty list. Cannot delete element. ");
         } else {
@@ -97,13 +75,13 @@ public class Operations {
             while (counter.next.next != null) {
                 counter = counter.next;
             }
+            counter.next.previous = null;
             counter.next = null;
         }
         return list;
     }
 
-    // Deletion of an element at a specified position.
-    public SinglyLinkedList deletePosition(SinglyLinkedList list, int position) {
+    public DoublyLinkedList deletePosition(DoublyLinkedList list, int position) {
         if (list.head == null) {
             System.out.print("Empty list. Cannot delete element.");
         } else {
@@ -111,10 +89,14 @@ public class Operations {
             if (position == 1) {
                 list.head.next = null;
                 list.head = counter.next;
+            } else if (sizeList(list) == position) {
+                list = deleteLast(list);
             } else {
                 int i = 1;
                 while (counter.next.next != null) {
                     if (i + 1 == position) {
+                        counter.next.previous = null;
+                        counter.next.next.previous = counter;
                         counter.next = counter.next.next;
                         break;
                     } else {
@@ -130,8 +112,22 @@ public class Operations {
         return list;
     }
 
-    // Searching for a specified element.
-    public void searchElement(SinglyLinkedList list, int element) {
+    public static int sizeList(DoublyLinkedList list) {
+        int i;
+        if (list.head == null) {
+            i = 0;
+        } else {
+            Node counter = list.head;
+            i = 0;
+            while (counter != null) {
+                counter = counter.next;
+                i++;
+            }
+        }
+        return i;
+    }
+
+    public void searchElement(DoublyLinkedList list, int element) {
         if (list.head == null) {
             System.out.print("Empty list. Element does not exist.");
         } else {
@@ -141,7 +137,6 @@ public class Operations {
             while (counter != null) {
                 if (counter.data == element) {
                     found = true;
-
                     break;
                 } else {
                     i++;
@@ -156,8 +151,7 @@ public class Operations {
         }
     }
 
-    // Updation of an element at a specified position.
-    public SinglyLinkedList updateElement(SinglyLinkedList list, int position, int newValue) {
+    public DoublyLinkedList updateElement(DoublyLinkedList list, int position, int newValue) {
         if (list.head == null) {
             System.out.print("Empty list. Cannot update element.");
         } else {
